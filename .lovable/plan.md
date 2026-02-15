@@ -1,77 +1,89 @@
 
-# S.M. Trade International — ওয়েবসাইট প্ল্যান
+# S.M. Trade International — Premium Website Upgrade
 
-## Overview
-S.M. Trade International এর জন্য একটি সিম্পল, নান্দনিক, এবং আই-ক্যাচিং single-page ওয়েবসাইট তৈরি করা হবে। ওয়েবসাইটটি বাংলা ও English দুই ভাষায় থাকবে (language switcher সহ)। কোম্পানির লোগো ও প্রোডাক্টের ছবিগুলো সরাসরি ব্যবহার করা হবে। ডিজাইন স্টাইলে SM Elite Hajj ওয়েবসাইটের মতো top bar (ফোন, ইমেইল, WhatsApp) থাকবে।
+## What Will Change
 
-## Color Theme
-কোম্পানির লোগো থেকে অনুপ্রাণিত — কালো, লাল এবং সাদা কালার স্কিম।
+The existing website already has the right structure (TopBar, Navbar, Hero, About, Services, Products, Clients, Contact, Footer, WhatsApp). This upgrade focuses on making it look more **premium, minimal, and elegant** — plus adding the missing **"Customization Process"** section and improving **SEO**.
 
-## Sections (Single Page — Scroll-based)
+---
 
-### 1. Top Contact Bar
-- ফোন: +88 01867666888
-- ইমেইল: smtrade.int94@gmail.com
-- WhatsApp বাটন (সরাসরি WhatsApp chat ওপেন হবে)
-- ভাষা পরিবর্তন বাটন (বাংলা/English)
+## 1. SEO Improvements (index.html)
+- Update page title to "S.M. Trade International | Premium Customized Corporate Gifts"
+- Update meta description, og:title, og:description with proper business keywords
+- Add Bengali language support meta tag
 
-### 2. Navigation Bar
-- কোম্পানির লোগো (বাম পাশে)
-- মেনু লিংক: Home, About, Products, Services, Contact
-- স্ক্রল করলে sticky navbar হবে
+## 2. Hero Section Upgrade
+- Update headline to: "Premium Customized Corporate Gifts & Promotional Products"
+- Update subtext to: "We customize your brand identity with quality, precision and professionalism."
+- Change second button from "Contact Us" to "View Products" (links to #products)
+- Add subtle fade-in animation on load
+- Add a soft gradient overlay for more depth
 
-### 3. Hero Section
-- বড় আকর্ষণীয় ব্যানার — "Your Trusted Partner for Customized Corporate Gifts"
-- কোম্পানির ট্যাগলাইন
-- "Get a Quote" / "Contact Us" CTA বাটন
+## 3. About Section Polish
+- Add slightly more elegant card styling with softer shadows
+- Keep existing stats but refine the visual presentation
 
-### 4. About Us Section
-- S.M. Trade International এর বিবরণ — সরকারি ও বেসরকারি প্রতিষ্ঠানের জন্য কাস্টমাইজড প্রমোশনাল গিফট তৈরি করে
-- কোম্পানির অভিজ্ঞতা ও দক্ষতার সংক্ষিপ্ত বর্ণনা
-- কিছু key stats (যেমন: ক্লায়েন্ট সংখ্যা, বছরের অভিজ্ঞতা ইত্যাদি — placeholder)
+## 4. Product Categories Section (New — replaces current Services)
+- Rename current "Services" to **"Product Categories"** with 4 cards:
+  - Corporate Gift Items (Tie, Crystal, Pen, Key Ring)
+  - Office Accessories (Wooden Tissue Box, Desk Organizer, Pen Holder)
+  - Leather Products (Executive File, Document Folder)
+  - Customized Glass & Crystal
+- Each card gets a relevant icon and short description
 
-### 5. Services Section
-- কার্ড ভিত্তিক সার্ভিস তালিকা:
-  - Corporate Gift Customization
-  - Logo & Brand Printing
-  - Bulk Order & Delivery
-  - Custom Packaging
+## 5. New Section: "Our Customization Process"
+- A new section added between Product Categories and the Product Gallery
+- 5-step horizontal/vertical timeline:
+  1. Requirement Discussion
+  2. Design Approval
+  3. Sample Production
+  4. Bulk Production
+  5. Delivery
+- Clean numbered steps with icons and connecting lines
+- Bilingual translations added
 
-### 6. Product Gallery Section
-- গ্রিড লেআউটে প্রোডাক্টের ছবিগুলো দেখানো হবে (PDF থেকে পাওয়া ছবি ব্যবহার করে):
-  - Customized Wooden Tissue Box
-  - Ties (বিভিন্ন ডিজাইন)
-  - Wooden Pen Holder
-  - Notebooks
-  - Glassware
-  - Bangabandhu Tunnel Souvenir Items
-- প্রতিটি ছবিতে ক্লিক করলে বড় করে দেখা যাবে (lightbox effect)
-- ক্যাটাগরি ফিল্টার অপশন
+## 6. Product Gallery — Minor Polish
+- Keep existing lightbox and category filter
+- Add smoother hover animations with soft shadows
 
-### 7. Clients / Trust Section
-- "আমরা যাদের সাথে কাজ করেছি" — notable ক্লায়েন্টের নাম/লোগো placeholder
-- Bangladesh Public Administration Training Centre (BPATC) এর মতো সরকারি প্রতিষ্ঠানের রেফারেন্স
+## 7. Clients Section — Minor Polish
+- Keep existing layout, add subtle card hover effects
 
-### 8. Contact Section
-- Contact Form (নাম, ইমেইল, ফোন, মেসেজ)
-- কোম্পানির ঠিকানা, ফোন, ইমেইল
-- WhatsApp দিয়ে সরাসরি যোগাযোগের বাটন
-- Google Maps এম্বেড (placeholder)
+## 8. Contact Section — Minor Polish
+- Refine form styling with softer borders and shadows
+- Keep all existing contact info and WhatsApp button
 
-### 9. Footer
-- কোম্পানির লোগো ও সংক্ষিপ্ত বিবরণ
-- দ্রুত লিংক
-- যোগাযোগের তথ্য
-- Social media লিংক (placeholder)
-- Copyright notice
+## 9. Footer & WhatsApp Float
+- No major changes needed — already well structured
 
-## Additional Features
-- **Floating WhatsApp Button** — পেজের নিচের কোনায় সবসময় দেখা যাবে
-- **Smooth Scroll Animation** — সেকশনগুলোতে সুন্দর scroll animation
-- **Fully Responsive** — মোবাইল, ট্যাবলেট ও ডেস্কটপে সুন্দরভাবে দেখাবে
-- **Language Toggle** — বাংলা/English সুইচ করা যাবে
+## 10. Animations & Visual Polish
+- Add fade-in keyframes to `tailwind.config.ts`
+- Apply `animate-fade-in` to major sections for smooth scroll appearance
+- Softer shadows across all cards (`shadow-sm` to `shadow-md` transitions)
 
-## Notes
-- এটি একটি **static informational website** — কোনো backend/database প্রয়োজন নেই
-- Contact form শুধু UI হিসেবে থাকবে (ইমেইল পাঠানোর জন্য পরবর্তীতে backend যোগ করা যাবে)
-- প্রোডাক্টের ছবিগুলো PDF থেকে এক্সট্র্যাক্ট করা ছবি সরাসরি ব্যবহার করা হবে
+## 11. Language Context Updates
+- Add translations for:
+  - New "Product Categories" section titles and descriptions
+  - "Our Customization Process" section (all 5 steps)
+  - Updated hero text
+
+---
+
+## Technical Details
+
+### Files to modify:
+1. **index.html** — SEO meta tags
+2. **src/contexts/LanguageContext.tsx** — Add ~20 new translation keys
+3. **src/components/HeroSection.tsx** — Updated text, second button target, fade animation
+4. **src/components/ServicesSection.tsx** — Rename to Product Categories with new content
+5. **src/components/ProductsSection.tsx** — Minor hover/shadow polish
+6. **src/pages/Index.tsx** — Add new ProcessSection between Services and Products
+
+### New file to create:
+7. **src/components/ProcessSection.tsx** — 5-step customization process timeline
+
+### Files with minor tweaks:
+8. **tailwind.config.ts** — Add fade-in keyframe animation
+9. **src/components/AboutSection.tsx** — Softer shadow styling
+10. **src/components/ClientsSection.tsx** — Subtle hover refinement
+11. **src/components/ContactSection.tsx** — Form styling polish
