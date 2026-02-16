@@ -1,12 +1,13 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, X, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import TopBar from '@/components/TopBar';
 import Navbar from '@/components/Navbar';
+import CatalogFilters from '@/components/catalog/CatalogFilters';
 import { lazy, Suspense } from 'react';
 
 const Footer = lazy(() => import('@/components/Footer'));
@@ -62,6 +63,8 @@ const Catalog = () => {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Product | null>(null);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Try DB products first
   const { data: dbProducts = [] } = useQuery({
@@ -96,9 +99,33 @@ const Catalog = () => {
     return staticProducts;
   }, [dbProducts]);
 
+  // Extract all unique features
+  const allFeatures = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach(p => p.features?.forEach(f => set.add(f)));
+    return Array.from(set).sort();
+  }, [products]);
+
+  const toggleFeature = useCallback((f: string) => {
+    setSelectedFeatures(prev =>
+      prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]
+    );
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setFilter('all');
+    setSelectedFeatures([]);
+    setSearch('');
+  }, []);
+
   const filtered = useMemo(() => {
     let result = products;
     if (filter !== 'all') result = result.filter(p => p.category === filter);
+    if (selectedFeatures.length > 0) {
+      result = result.filter(p =>
+        selectedFeatures.every(f => p.features?.includes(f))
+      );
+    }
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(p =>
@@ -107,7 +134,7 @@ const Catalog = () => {
       );
     }
     return result;
-  }, [products, filter, search]);
+  }, [products, filter, search, selectedFeatures]);
 
   const title = (p: Product) => lang === 'en' ? p.titleEn : p.titleBn;
   const desc = (p: Product) => lang === 'en' ? p.descEn : p.descBn;
@@ -137,101 +164,114 @@ const Catalog = () => {
         </div>
       </section>
 
-      {/* Filters & Search */}
+      {/* Search bar */}
       <section className="sticky top-16 z-40 bg-background/95 backdrop-blur-lg border-b border-border py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <div className="flex gap-2 flex-wrap justify-center">
-              {categories.map(c => (
-                <button
-                  key={c.id}
-                  onClick={() => setFilter(c.id)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    filter === c.id
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'bg-secondary text-foreground hover:bg-accent/20'
-                  }`}
-                  style={{ fontFamily: 'DM Sans, sans-serif' }}
-                >
-                  {lang === 'en' ? c.labelEn : c.labelBn}
-                </button>
-              ))}
-            </div>
-            <div className="relative flex-1 max-w-xs ml-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder={lang === 'en' ? 'Search catalog...' : 'ক্যাটালগ খুঁজুন...'}
-                className="pl-10 rounded-full"
-              />
-            </div>
+        <div className="container mx-auto px-4 flex items-center gap-3">
+          <CatalogFilters
+            lang={lang}
+            categories={categories}
+            filter={filter}
+            setFilter={setFilter}
+            selectedFeatures={selectedFeatures}
+            toggleFeature={toggleFeature}
+            allFeatures={[]}
+            onReset={resetFilters}
+            open={filtersOpen}
+            setOpen={setFiltersOpen}
+            variant="sticky"
+          />
+          <div className="relative flex-1 max-w-sm ml-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder={lang === 'en' ? 'Search catalog...' : 'ক্যাটালগ খুঁজুন...'}
+              className="pl-10 rounded-full"
+            />
           </div>
         </div>
       </section>
 
-      {/* Product Grid */}
+      {/* Content with sidebar */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <p className="text-sm text-muted-foreground mb-8" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-            {lang === 'en'
-              ? `Showing ${filtered.length} product${filtered.length !== 1 ? 's' : ''}`
-              : `${filtered.length}টি পণ্য দেখানো হচ্ছে`}
-          </p>
-
-          {filtered.length === 0 ? (
-            <div className="text-center py-24 text-muted-foreground">
-              {lang === 'en' ? 'No products found.' : 'কোনো পণ্য পাওয়া যায়নি।'}
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Sidebar filters */}
+            <div className="hidden md:block">
+              <CatalogFilters
+                lang={lang}
+                categories={categories}
+                filter={filter}
+                setFilter={setFilter}
+                selectedFeatures={selectedFeatures}
+                toggleFeature={toggleFeature}
+                allFeatures={allFeatures}
+                onReset={resetFilters}
+                open={true}
+                setOpen={() => {}}
+              />
             </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filtered.map((p, i) => (
-                <div
-                  key={i}
-                  className="group cursor-pointer bg-card rounded-2xl border border-border/50 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-400"
-                  onClick={() => setSelected(p)}
-                >
-                  {/* Image */}
-                  <div className="aspect-[4/3] bg-white overflow-hidden relative">
-                    <img
-                      src={p.src}
-                      alt={title(p)}
-                      className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-primary/90 text-primary-foreground text-[11px] font-semibold px-3 py-1 rounded-full backdrop-blur-sm" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                        {categories.find(c => c.id === p.category)?.[lang === 'en' ? 'labelEn' : 'labelBn'] || p.category}
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* Details */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold mb-2 group-hover:text-accent transition-colors">{title(p)}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mb-4" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                      {desc(p)}
-                    </p>
+            {/* Product grid */}
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground mb-6" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+                {lang === 'en'
+                  ? `Showing ${filtered.length} product${filtered.length !== 1 ? 's' : ''}`
+                  : `${filtered.length}টি পণ্য দেখানো হচ্ছে`}
+              </p>
 
-                    {/* Feature tags */}
-                    {p.features && p.features.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {p.features.map((f, fi) => (
-                          <span key={fi} className="text-[10px] font-medium bg-accent/10 text-accent px-2.5 py-1 rounded-full" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                            {f}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <span className="text-sm font-semibold text-accent group-hover:underline" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-                      {lang === 'en' ? 'View Details →' : 'বিস্তারিত দেখুন →'}
-                    </span>
-                  </div>
+              {filtered.length === 0 ? (
+                <div className="text-center py-24 text-muted-foreground">
+                  <p className="mb-4">{lang === 'en' ? 'No products found.' : 'কোনো পণ্য পাওয়া যায়নি।'}</p>
+                  <Button variant="outline" size="sm" onClick={resetFilters}>
+                    {lang === 'en' ? 'Clear filters' : 'ফিল্টার মুছুন'}
+                  </Button>
                 </div>
-              ))}
+              ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filtered.map((p, i) => (
+                    <div
+                      key={i}
+                      className="group cursor-pointer bg-card rounded-2xl border border-border/50 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-400"
+                      onClick={() => setSelected(p)}
+                    >
+                      <div className="aspect-[4/3] bg-white overflow-hidden relative">
+                        <img
+                          src={p.src}
+                          alt={title(p)}
+                          className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <span className="bg-primary/90 text-primary-foreground text-[11px] font-semibold px-3 py-1 rounded-full backdrop-blur-sm" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+                            {categories.find(c => c.id === p.category)?.[lang === 'en' ? 'labelEn' : 'labelBn'] || p.category}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-lg font-bold mb-2 group-hover:text-accent transition-colors">{title(p)}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3 mb-4" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+                          {desc(p)}
+                        </p>
+                        {p.features && p.features.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            {p.features.map((f, fi) => (
+                              <span key={fi} className="text-[10px] font-medium bg-accent/10 text-accent px-2.5 py-1 rounded-full" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+                                {f}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <span className="text-sm font-semibold text-accent group-hover:underline" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+                          {lang === 'en' ? 'View Details →' : 'বিস্তারিত দেখুন →'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </section>
 
