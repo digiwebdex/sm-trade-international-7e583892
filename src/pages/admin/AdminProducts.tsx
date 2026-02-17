@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2, Upload, Image as ImageIcon, PackagePlus } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import BulkUploadZone, { type FileItem } from '@/components/admin/BulkUploadZone';
+import VariantManager from '@/components/admin/VariantManager';
 
 interface ProductForm {
   name_en: string;
@@ -296,6 +297,12 @@ const AdminProducts = () => {
                   </Button>
                 </div>
               </form>
+              {/* Variant management - only when editing existing product */}
+              {editId && (
+                <div className="border-t border-border pt-4 mt-4">
+                  <VariantManager productId={editId} />
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         </div>
