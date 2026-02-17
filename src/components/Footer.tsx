@@ -108,6 +108,12 @@ const Footer = () => {
           <span className="text-primary-foreground/35 text-sm">
             © {new Date().getFullYear()} S. M. Trade International. {copyright}
           </span>
+          <span className="text-primary-foreground/35 text-sm">
+            Digitally Crafted by{' '}
+            <a href="https://digiwebdex.com" target="_blank" rel="noopener noreferrer" className="hover:text-[hsl(var(--sm-gold))] transition-colors duration-300">
+              Digiwebdex.com
+            </a>
+          </span>
           <a
             href="#home"
             className="flex items-center gap-2 text-primary-foreground/40 hover:text-[hsl(var(--sm-gold))] text-sm transition-colors duration-300"
