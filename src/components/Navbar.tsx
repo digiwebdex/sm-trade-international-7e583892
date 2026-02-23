@@ -136,7 +136,7 @@ const Navbar = () => {
         {/* Search bar — desktop */}
         <form
           onSubmit={handleSearch}
-          className="hidden md:flex flex-1 max-w-sm items-stretch h-9 rounded-md border-2 border-[hsl(var(--sm-gold))] shadow-sm overflow-visible"
+          className="hidden md:flex flex-1 max-w-lg items-stretch h-9 rounded-md border-2 border-[hsl(var(--sm-gold))] shadow-sm overflow-visible"
         >
           {/* Category selector */}
           <div className="relative flex-shrink-0" ref={searchCatRef}>
