@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
 interface CatalogFiltersProps {
-  lang: 'en' | 'bn';
+  lang: string;
   categories: { id: string; labelEn: string; labelBn: string }[];
   filter: string;
   setFilter: (id: string) => void;
