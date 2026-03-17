@@ -96,16 +96,20 @@ const HeroSection = () => {
 
   const len = carouselItems.length;
 
-  const goTo = useCallback((idx: number) => {
+  // Direction tracking for cube rotation
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+
+  const goTo = useCallback((idx: number, dir?: 'next' | 'prev') => {
     if (animating || idx === current) return;
+    setDirection(dir || (idx > current ? 'next' : 'prev'));
     setPrevIdx(current);
     setAnimating(true);
     setCurrent(idx);
     setTimeout(() => setAnimating(false), 700);
   }, [current, animating]);
 
-  const next = useCallback(() => goTo((current + 1) % len), [goTo, current, len]);
-  const prev = useCallback(() => goTo((current - 1 + len) % len), [goTo, current, len]);
+  const next = useCallback(() => goTo((current + 1) % len, 'next'), [goTo, current, len]);
+  const prev = useCallback(() => goTo((current - 1 + len) % len, 'prev'), [goTo, current, len]);
 
   useEffect(() => {
     if (paused) return;
