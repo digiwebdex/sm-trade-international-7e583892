@@ -14,11 +14,27 @@ import type { Json } from '@/integrations/supabase/types';
 type SettingsMap = Record<string, Record<string, string>>;
 
 const defaultSettings: Record<string, SettingsMap> = {
+  branding: {
+    company_name: { en: 'S. M. Trade International', bn: 'এস. এম. ট্রেড ইন্টারন্যাশনাল' },
+    tagline: { en: 'Premium Corporate Gifts', bn: 'প্রিমিয়াম কর্পোরেট গিফট' },
+    topbar_badge: { en: '1st Class Govt. Contractor, Supplier & Importer', bn: '১ম শ্রেণীর সরকারি ঠিকাদার, সরবরাহকারী ও আমদানিকারক' },
+    credit_text: { en: 'Digitally Crafted by Digiwebdex.com', bn: 'Digitally Crafted by Digiwebdex.com' },
+    credit_url: { en: 'https://digiwebdex.com', bn: 'https://digiwebdex.com' },
+    google_maps_embed: { en: '', bn: '' },
+  },
   hero: {
     title: { en: '', bn: '' },
     subtitle: { en: '', bn: '' },
     cta_primary: { en: '', bn: '' },
     cta_secondary: { en: '', bn: '' },
+    stat1_value: { en: '500+', bn: '৫০০+' },
+    stat1_label: { en: 'Clients', bn: 'ক্লায়েন্ট' },
+    stat2_value: { en: '10+', bn: '১০+' },
+    stat2_label: { en: 'Years', bn: 'বছর' },
+    stat3_value: { en: '1000+', bn: '১০০০+' },
+    stat3_label: { en: 'Products', bn: 'পণ্য' },
+    stat4_value: { en: '50+', bn: '৫০+' },
+    stat4_label: { en: 'Countries', bn: 'দেশ' },
   },
   about: {
     title: { en: '', bn: '' },
