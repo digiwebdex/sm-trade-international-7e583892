@@ -25,6 +25,7 @@ const navItems = [
   { label: 'Gallery', icon: Image, path: '/admin/gallery' },
   { label: 'Clients', icon: Users, path: '/admin/clients' },
   { label: 'Messages', icon: Mail, path: '/admin/messages' },
+  { label: 'Quote Requests', icon: FileText, path: '/admin/quotes' },
   { label: 'SEO', icon: Globe, path: '/admin/seo' },
   { label: 'Site Settings', icon: Settings, path: '/admin/settings' },
   { label: 'Backup', icon: HardDrive, path: '/admin/backup' },
