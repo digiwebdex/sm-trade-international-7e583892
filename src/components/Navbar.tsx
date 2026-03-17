@@ -10,10 +10,12 @@ import logo from '@/assets/logo-sm.webp';
 
 const Navbar = () => {
   const { t, lang } = useLanguage();
+  const { get } = useSiteSettings();
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
   const prefetchHome = usePrefetchHome();
+  const companyName = get('branding', 'company_name', 'S. M. Trade International');
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
