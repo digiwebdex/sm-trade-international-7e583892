@@ -380,6 +380,8 @@ const ProductDetail = () => {
                       <button
                         key={v.color_name}
                         onClick={() => handleColorSelect(v.color_name!)}
+                        onMouseEnter={() => setHoveredColor(v.color_name)}
+                        onMouseLeave={() => setHoveredColor(null)}
                         title={v.color_name ?? ''}
                         className={cn(
                           'relative w-[52px] h-[52px] rounded-lg overflow-hidden transition-all duration-200',
