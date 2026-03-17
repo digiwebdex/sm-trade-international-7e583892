@@ -41,6 +41,7 @@ const stats = [
 ];
 
 const SPEED = 3500;
+const CUBE_SIZE = 280; // px – height & depth of cube
 
 
 const HeroSection = () => {
@@ -95,16 +96,20 @@ const HeroSection = () => {
 
   const len = carouselItems.length;
 
-  const goTo = useCallback((idx: number) => {
+  // Direction tracking for cube rotation
+  const [direction, setDirection] = useState<'next' | 'prev'>('next');
+
+  const goTo = useCallback((idx: number, dir?: 'next' | 'prev') => {
     if (animating || idx === current) return;
+    setDirection(dir || (idx > current ? 'next' : 'prev'));
     setPrevIdx(current);
     setAnimating(true);
     setCurrent(idx);
     setTimeout(() => setAnimating(false), 700);
   }, [current, animating]);
 
-  const next = useCallback(() => goTo((current + 1) % len), [goTo, current, len]);
-  const prev = useCallback(() => goTo((current - 1 + len) % len), [goTo, current, len]);
+  const next = useCallback(() => goTo((current + 1) % len, 'next'), [goTo, current, len]);
+  const prev = useCallback(() => goTo((current - 1 + len) % len, 'prev'), [goTo, current, len]);
 
   useEffect(() => {
     if (paused) return;
@@ -207,61 +212,95 @@ const HeroSection = () => {
             {/* Ambient glow behind active card */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
 
-            {/* 3D Box Cube */}
-            <div className="relative w-full flex justify-center mb-6" style={{ perspective: '1000px' }}>
+            {/* 3D Cube */}
+            <div className="relative w-full flex justify-center mb-6" style={{ perspective: '1200px' }}>
               <div
                 className="relative"
                 style={{
                   width: 300,
-                  height: 280,
+                  height: CUBE_SIZE,
                   transformStyle: 'preserve-3d',
                 }}
               >
-                {/* Current face */}
+                {/* The rotating cube container — key forces remount to reset rotation */}
                 <div
-                  className="absolute inset-0 rounded-2xl overflow-hidden bg-white shadow-[0_20px_70px_-15px_hsl(var(--sm-gold)/0.4)] ring-2 ring-accent/20 cursor-pointer backface-hidden"
+                  key={`${current}-${prevIdx}`}
                   style={{
-                    transform: animating ? 'rotateY(0deg)' : 'rotateY(0deg)',
-                    animation: animating ? 'cubeRotateIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards' : undefined,
-                  }}
-                  onClick={() => {
-                    const item = carouselItems[current];
-                    if (item?.id) navigate(`/product/${item.id}`);
-                    else navigate('/catalog');
+                    width: 300,
+                    height: CUBE_SIZE,
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    animation: animating
+                      ? direction === 'next'
+                        ? 'cubeRotateNext 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards'
+                        : 'cubeRotatePrev 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards'
+                      : undefined,
                   }}
                 >
-                  <div className="p-4 flex items-center justify-center h-full">
-                    <OptimizedImage
-                      src={carouselItems[current]?.img || ''}
-                      alt={carouselItems[current]?.label || ''}
-                      className="w-full h-full object-contain"
-                      sizes="300px"
-                      priority
-                      blurPlaceholder={false}
-                    />
-                  </div>
-                  <div className="absolute bottom-0 inset-x-0 h-14 bg-gradient-to-t from-accent/10 to-transparent pointer-events-none" />
-                </div>
-
-                {/* Previous face (rotating out) */}
-                {animating && (
+                  {/* Front face — shows prevIdx during animation, current when idle */}
                   <div
-                    className="absolute inset-0 rounded-2xl overflow-hidden bg-white shadow-xl ring-1 ring-white/10 backface-hidden"
+                    className="absolute inset-0 rounded-2xl overflow-hidden bg-white shadow-[0_20px_70px_-15px_hsl(var(--sm-gold)/0.4)] ring-2 ring-accent/20 cursor-pointer"
                     style={{
-                      animation: 'cubeRotateOut 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+                      backfaceVisibility: 'hidden',
+                      transform: `translateZ(${CUBE_SIZE / 2}px)`,
+                    }}
+                    onClick={() => {
+                      const item = carouselItems[current];
+                      if (item?.id) navigate(`/product/${item.id}`);
+                      else navigate('/catalog');
                     }}
                   >
                     <div className="p-4 flex items-center justify-center h-full">
                       <OptimizedImage
-                        src={carouselItems[prevIdx]?.img || ''}
-                        alt={carouselItems[prevIdx]?.label || ''}
+                        src={carouselItems[animating ? prevIdx : current]?.img || ''}
+                        alt={carouselItems[animating ? prevIdx : current]?.label || ''}
+                        className="w-full h-full object-contain"
+                        sizes="300px"
+                        priority
+                        blurPlaceholder={false}
+                      />
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 h-14 bg-gradient-to-t from-accent/10 to-transparent pointer-events-none" />
+                  </div>
+
+                  {/* Right face — incoming item when rotating next */}
+                  <div
+                    className="absolute inset-0 rounded-2xl overflow-hidden bg-white shadow-xl ring-2 ring-accent/20"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      transform: `rotateY(90deg) translateZ(${CUBE_SIZE / 2}px)`,
+                    }}
+                  >
+                    <div className="p-4 flex items-center justify-center h-full">
+                      <OptimizedImage
+                        src={carouselItems[current]?.img || ''}
+                        alt={carouselItems[current]?.label || ''}
                         className="w-full h-full object-contain"
                         sizes="300px"
                         blurPlaceholder={false}
                       />
                     </div>
                   </div>
-                )}
+
+                  {/* Left face — incoming item when rotating prev */}
+                  <div
+                    className="absolute inset-0 rounded-2xl overflow-hidden bg-white shadow-xl ring-2 ring-accent/20"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      transform: `rotateY(-90deg) translateZ(${CUBE_SIZE / 2}px)`,
+                    }}
+                  >
+                    <div className="p-4 flex items-center justify-center h-full">
+                      <OptimizedImage
+                        src={carouselItems[current]?.img || ''}
+                        alt={carouselItems[current]?.label || ''}
+                        className="w-full h-full object-contain"
+                        sizes="300px"
+                        blurPlaceholder={false}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Nav arrows */}
