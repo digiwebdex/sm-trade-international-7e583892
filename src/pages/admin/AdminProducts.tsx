@@ -154,6 +154,7 @@ interface StagedVariant {
   color_name: string;
   color_hex: string;
   stock: number;
+  unit_price: number;
   is_active: boolean;
   imageFile?: File;
   imageUrl?: string;
