@@ -103,7 +103,7 @@ const ProductDetail = () => {
     enabled: !!product?.category_id,
   });
 
-  // Build gallery images
+  // Build gallery images - if a variant is selected, show its image first
   const galleryImages = useMemo((): TypedImage[] => {
     const result: TypedImage[] = [];
     const seen = new Set<string>();
@@ -112,6 +112,15 @@ const ProductDetail = () => {
       seen.add(img.url);
       result.push(img);
     };
+
+    // If a variant is selected and has an image, show it first
+    if (selectedVariantId) {
+      const sv = variants.find((v: any) => v.id === selectedVariantId);
+      if (sv?.image_url) {
+        add({ id: sv.id, url: sv.image_url, image_type: 'main', variant_id: sv.id });
+      }
+    }
+
     (productImages as any[]).forEach(img => add({
       id: img.id, url: img.image_url, image_type: img.image_type ?? 'main', variant_id: null,
     }));
@@ -119,9 +128,10 @@ const ProductDetail = () => {
       add({ url: product.image_url, image_type: 'main' });
     }
     return result;
-  }, [productImages, product]);
+  }, [productImages, product, selectedVariantId, variants]);
 
-  const unitPrice = Number((product as any)?.unit_price) || 0;
+  const selectedVariant = variants.find((v: any) => v.id === selectedVariantId);
+  const unitPrice = Number(selectedVariant?.unit_price || (product as any)?.unit_price) || 0;
   const totalPrice = unitPrice * quantity;
 
   const handleAddToQuote = () => {
