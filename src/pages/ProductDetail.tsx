@@ -260,6 +260,46 @@ const ProductDetail = () => {
               <p className="text-sm text-muted-foreground">{shortDesc}</p>
             )}
 
+            {/* Color Variants */}
+            {variants.length > 0 && (
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-foreground">
+                  {lang === 'en' ? 'Color' : 'রঙ'}:{' '}
+                  <span className="font-bold">
+                    {selectedVariant
+                      ? (selectedVariant.color_name || selectedVariant.variant_label_en)
+                      : (lang === 'en' ? 'Select a color' : 'একটি রঙ নির্বাচন করুন')}
+                  </span>
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {variants.map((v: any) => (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => setSelectedVariantId(v.id === selectedVariantId ? null : v.id)}
+                      className={cn(
+                        'relative w-16 h-16 rounded border-2 overflow-hidden transition-all bg-white',
+                        selectedVariantId === v.id
+                          ? 'border-primary ring-1 ring-primary'
+                          : 'border-border/50 hover:border-foreground/40'
+                      )}
+                      title={v.color_name || v.variant_label_en}
+                    >
+                      {v.image_url ? (
+                        <img src={v.image_url} alt={v.color_name || v.variant_label_en} className="w-full h-full object-cover" />
+                      ) : v.color_hex ? (
+                        <div className="w-full h-full" style={{ backgroundColor: v.color_hex }} />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[10px] text-muted-foreground">
+                          {v.variant_label_en?.slice(0, 3)}
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="h-px bg-border/50" />
 
             {/* Price */}
