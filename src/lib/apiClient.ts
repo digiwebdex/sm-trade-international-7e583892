@@ -70,6 +70,13 @@ class QueryBuilder {
     return this;
   }
 
+  is(column: string, value: any): this {
+    if (value === null) {
+      this._filters.push({ column, op: 'is_null', value: null });
+    }
+    return this;
+  }
+
   in(column: string, values: any[]): this {
     this._inFilters.push({ column, values });
     return this;
