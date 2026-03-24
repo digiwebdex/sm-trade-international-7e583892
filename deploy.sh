@@ -15,6 +15,6 @@ echo "🔨 Building frontend..."
 npm run build
 
 echo "♻️ Restarting backend..."
-pm2 restart sm-trade-backend
+pm2 restart sm-trade-backend --update-env
 
 echo "✅ Deploy complete!"
