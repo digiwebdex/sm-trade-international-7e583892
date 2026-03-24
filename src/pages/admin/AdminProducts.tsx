@@ -252,7 +252,7 @@ const InlineVariantManager = ({ staged, onStaged, productCode, productId }: Inli
       is_active: v.is_active,
       image_url: v.imageUrl || null,
       min_quantity: 1,
-      unit_price: 0,
+      unit_price: v.unit_price || 0,
       sort_order: liveVariants.length + 1,
     };
     const { error } = await supabase.from('product_variants').insert(payload as any);
