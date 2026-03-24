@@ -469,7 +469,7 @@ const ProductDetail = () => {
               {/* Price in buy box */}
               {unitPrice > 0 && (
                 <div className="text-xl font-medium text-foreground">
-                  ৳{discountedPrice.toFixed(0)}<span className="text-xs align-top text-muted-foreground ml-0.5">00</span>
+                  ৳{unitPrice.toFixed(0)}<span className="text-xs align-top text-muted-foreground ml-0.5">00</span>
                 </div>
               )}
 
