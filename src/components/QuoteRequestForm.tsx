@@ -60,13 +60,13 @@ const QuoteRequestForm = () => {
     setGeneratedQuote('');
 
     try {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
       const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-quote`,
+        `${apiBase}/generate-quote`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
           body: JSON.stringify({
             company_name: form.company_name,
